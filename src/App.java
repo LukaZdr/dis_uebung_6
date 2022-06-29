@@ -93,7 +93,6 @@ public class App {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        batchSize = batchSize + 1;
     }
 
     public static int readStores(String storeName) {

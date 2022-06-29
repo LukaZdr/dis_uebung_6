@@ -2,21 +2,21 @@ import java.sql.*;
 import java.text.Normalizer.Form;
 import java.io.*;
 
-public class managerEntry {
+public class managerTable {
     public static void main(String[] args) throws Exception {
         String timeDimension = "";
         String productDimension = "";
         String locationDimension = "";
         String sortSetting = "";
-        System.out.println("Welche Zeitdimension soll dargestellt werden? 1: Datum 2: Monat, 3: Quartal 4: Jahr");
-        int zeitDimension = FormUtil.readInt("Bitte gib die gewünschte Dimension ein: ");
+        System.out.println("Zeitdimension? 1: Datum 2: Monat, 3: Quartal 4: Jahr");
+        int zeitDimension = FormUtil.readInt("Wähle deine gewünschte Dimension");
         System.out.println(
-                "Welche Produktdimension soll dargestellt werden? 1: Artikel 2: Gruppen, 3: Familie 4: Kategorie");
-        int produktDimension = FormUtil.readInt("Bitte gib die gewünschte Dimension ein: ");
-        System.out.println("Welche Standortdimension soll dargestellt werden? 1: Shop 2: Stadt, 3: Region 4: Land");
-        int standortDimension = FormUtil.readInt("Bitte gib die gewünschte Dimension ein: ");
-        System.out.println("Wonach soll sortiert werden? 1: Zeit, 2: Standort, 3: Produkt");
-        int sortierEinstellung = FormUtil.readInt("Bitte gib die Sortierpräferenz ein: ");
+                "Produktdimension? 1: Artikel 2: Gruppen, 3: Familie 4: Kategorie");
+        int produktDimension = FormUtil.readInt("Wähle deine gewünschte Dimension");
+        System.out.println("Standortdimension? 1: Shop 2: Stadt, 3: Region 4: Land");
+        int standortDimension = FormUtil.readInt("Wähle deine gewünschte Dimension");
+        System.out.println("Sortieren nach? 1: Zeit, 2: Standort, 3: Produkt");
+        int sortierEinstellung = FormUtil.readInt("Sortierpräferenz");
 
         switch (zeitDimension) {
             case 1:
