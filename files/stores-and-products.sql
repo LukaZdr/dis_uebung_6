@@ -1,11 +1,11 @@
 DROP TABLE if exists Country cascade;
-drop table if exists Region cascade;
+DROP TABLE if exists Region cascade;
 DROP TABLE if exists City cascade;
-drop table if exists Shop cascade;
+DROP TABLE if exists Shop cascade;
 DROP TABLE if exists Article cascade;
-drop table if exists ProductGroup cascade;
+DROP TABLE if exists ProductGroup cascade;
 DROP TABLE if exists ProductFamily cascade;
-drop table if exists ProductCategory cascade;
+DROP TABLE if exists ProductCategory cascade;
 
 CREATE TABLE Country (
   CountryID int NOT NULL,

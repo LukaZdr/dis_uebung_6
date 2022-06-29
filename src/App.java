@@ -2,8 +2,8 @@ import java.sql.*;
 import java.io.*;
 
 public class App {
-    private static int batchSize;
-    private static int maxBatchSize = 200000;
+    private static int batchSize = 2000;
+    private static int currentSale;
 
     public static void main(String[] args) throws Exception {
         // Read and Execute SQL File
@@ -45,12 +45,16 @@ public class App {
     }
 
     public static void readProducts() {
-        batchSize = 0;
+    	currentSale = 0;
         try (BufferedReader br = new BufferedReader(new FileReader("./files/sales.csv"))) {
             String line;
             br.readLine();
-            while ((line = br.readLine()) != null && batchSize < maxBatchSize) {
-                batchSize = batchSize + 1;
+            Connection con = DbConnectionManager.getInstance().getConnection();
+            String sqlString = "INSERT INTO sales (shopid, productid, dateid, sold, revenue) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement batchInsert = con.prepareStatement(sqlString);
+            
+            while ((line = br.readLine()) != null) {
+            	currentSale = currentSale + 1;
                 String[] singleLine = line.split(";");
                 String product = singleLine[2];
                 if (product.contains("�")) {
@@ -62,15 +66,29 @@ public class App {
 
                 }
                 Product prod = Product.load(product);
-                int prodID = prod.save();
+                int productid = prod.save();
                 int dateid = readDates(singleLine[0]);
                 int shopid = readStores(singleLine[1]);
+                
+                batchInsert.setInt(1, shopid);
+                batchInsert.setInt(2, productid);
+                batchInsert.setInt(3, dateid);
+                batchInsert.setDouble(4, Integer.parseInt(singleLine[3]));
+                batchInsert.setDouble(5, Double.parseDouble(singleLine[4].replace(",", ".")));
+                batchInsert.addBatch();
 
-                Sales.saveToSales(prodID, Double.parseDouble(singleLine[3].replace(",", ".")),
-                        Double.parseDouble(singleLine[4].replace(",", ".")), shopid, dateid);
-                System.out.println("Produktkauf für " + prod.getArticle() + " wurde gespeichert!");
+                if ((currentSale % batchSize) == 0) {
+                	batchInsert.executeBatch();
+                	System.out.println(currentSale + " Verkaeufe wurden gespeichert");
+                	batchInsert.clearBatch();
+                }
 
             }
+            
+            // if last batch has under {batchSize} entrys
+            batchInsert.executeBatch();
+            System.out.println(currentSale + " Verkaeufe wurden gespeichert"); 
+        	batchInsert.clearBatch();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,7 +101,8 @@ public class App {
             storeName = storeName.replace("�", "ü");
         }
         String shopname = storeName;
-        storeName = storeName.split(" ")[1];
+        String[] nameList = storeName.split(" ");
+        storeName = nameList[nameList.length-1];
         Shop shop = Shop.load(storeName);
         int shopid = shop.save(shopname);
         return shopid;

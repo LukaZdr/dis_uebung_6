@@ -53,7 +53,6 @@ public class Shop {
                 Shop pr = new Shop();
                 pr.setCity(rs.getString("name"));
                 List<String> shopinfo = getShopInformation(rs.getInt("regionid"));
-                System.out.println(shopinfo);
                 pr.setRegion(shopinfo.get(0));
                 pr.setCountry(shopinfo.get(1));
                 rs.close();
@@ -117,7 +116,6 @@ public class Shop {
             ResultSet rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
                 id = rs.getInt(1);
-                System.out.println(id);
             }
             rs.close();
             pstmt.close();
